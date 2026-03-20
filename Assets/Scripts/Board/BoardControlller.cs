@@ -46,10 +46,20 @@ namespace Game.Board
 
         private bool _busy;
 
-        // ── Lifecycle ─────────────────────────────────────────────────────────
-
         private void Awake()
         {
+            // FPS Cap
+            QualitySettings.vSyncCount = 1;
+
+            // Ekran hızı alınabiliyorsa onu hedef al, yoksa 60'a sabitle
+            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value > 0 
+                ? (int)Screen.currentResolution.refreshRateRatio.value 
+                : 60;
+
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+            UnityEngine.Input.multiTouchEnabled = false; 
+
             _save = Services.Save;
             _currency = Services.Currency;
             _progress = new ProgressService(_save, _currency);
@@ -58,7 +68,7 @@ namespace Game.Board
             if (!input) input = GetComponentInChildren<BoardTouchInput>(true);
             if (!audioFX) audioFX = GetComponentInChildren<BoardAudio>(true);
 
-            DOTween.SetTweensCapacity(500, 50);
+            DOTween.SetTweensCapacity(700, 50);
         }
 
         private void OnEnable()
