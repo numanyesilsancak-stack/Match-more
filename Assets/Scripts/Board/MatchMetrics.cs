@@ -5,12 +5,16 @@ namespace Game.Board
     public static class MatchMetrics
     {
         // 3/4/5 match ses tespiti — blok (2x2, 2x3, 3x2) → match4 ses çalar
-        public static int GetMaxLineMatchLen(BoardModel model, List<int> matches)
+        public struct MatchInfo
         {
-            // Önce blok var mı bak (2x2 yeterli, daha büyük blok da buradan geçer)
-            if (HasBlock(model, matches)) return 4;
+            public int MaxLen;
+            public bool IsQuad;
+            public bool IsComplex;
+        }
 
-            int maxLen = 3;
+        public static MatchInfo AnalyzeMatch(BoardModel model, List<int> matches)
+        {
+            var info = new MatchInfo { MaxLen = 3, IsQuad = HasBlock(model, matches), IsComplex = false };
 
             for (int i = 0; i < matches.Count; i++)
             {
@@ -25,12 +29,14 @@ namespace Game.Board
                 for (int yy = y - 1; yy >= 0 && model.types[x, yy] == t; yy--) v++;
                 for (int yy = y + 1; yy < model.h && model.types[x, yy] == t; yy++) v++;
 
+                if (h >= 3 && v >= 3) info.IsComplex = true;
+
                 int localMax = (h > v) ? h : v;
-                if (localMax > maxLen) maxLen = localMax;
-                if (maxLen >= 5) return 5;
+                if (localMax > info.MaxLen) info.MaxLen = localMax;
             }
 
-            return maxLen >= 5 ? 5 : (maxLen == 4 ? 4 : 3);
+            if (info.MaxLen > 5) info.MaxLen = 5;
+            return info;
         }
 
         // Match listesinde 2x2 veya daha büyük blok köşesi var mı?

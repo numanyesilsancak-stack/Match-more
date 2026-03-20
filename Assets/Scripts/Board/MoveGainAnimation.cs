@@ -21,7 +21,7 @@ namespace Game.UI
         }
 
         private void OnEnable()
-        {
+        { 
             Game.Core.EventBus.MovesPurchased += OnMovesPurchased;
         }
 

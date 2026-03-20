@@ -26,8 +26,9 @@ namespace Game.Board
 
             while (MatchFinder.FindAllMatches(model, matches) > 0)
             {
-                int matchLen = MatchMetrics.GetMaxLineMatchLen(model, matches);
-                _audio?.PlayMatchSfx(matchLen, cascadeIndex);
+                var matchInfo = MatchMetrics.AnalyzeMatch(model, matches);
+                _audio?.PlayMatchSfx(matchInfo.IsQuad ? 4 : matchInfo.MaxLen, cascadeIndex);
+                _view.Vfx.PlayMatchVfx(matches, matchInfo.MaxLen, matchInfo.IsQuad, matchInfo.IsComplex);
                 cascadeIndex++;
 
                 int cleared = matches.Count;
