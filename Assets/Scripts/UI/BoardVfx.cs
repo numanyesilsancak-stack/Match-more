@@ -22,11 +22,11 @@ namespace Game.Board
             float speed;
 
             // Efekt gücünü ve miktarını türüne göre ayarla
-            if (isComplex)       { count = 18; speed = 400f; } // Turuncu — T/L
-            else if (isQuad)     { count = 14; speed = 350f; } // Sarı — Quad
-            else if (matchLen>=5){ count = 25; speed = 500f; } // Pembe — 5'li
-            else if (matchLen==4){ count = 12; speed = 350f; } // Mavi — 4'lü
-            else                 { count = 8;  speed = 250f; } // Beyaz — 3'lü
+            if (isComplex)       { count = 18; speed = 400f; } // — T/L
+            else if (isQuad)     { count = 14; speed = 350f; } // — Quad
+            else if (matchLen>=5){ count = 25; speed = 500f; } //  — 5'li
+            else if (matchLen==4){ count = 12; speed = 350f; } //  — 4'lü
+            else                 { count = 8;  speed = 250f; } //  — 3'lü
 
             // Eşleşen taşlardan birincisinin rengini ve Tipini bul
             TileType tType = TileType.RootRed;
@@ -97,7 +97,6 @@ namespace Game.Board
 
         private void SpawnBurst(Vector2 localPos, Color solidColor, Color paleColor, int particleCount, float speed)
         {
-            // Verilere BoardView üzerinden okuyoruz
             var boardRoot = _view.BoardRoot;
             var canvas = _view.ParentCanvas;
             var canvasCam = _view.CanvasCam;
@@ -107,30 +106,34 @@ namespace Game.Board
             float s = boardRoot.lossyScale.x;
 
             var go = new GameObject("VFX_Burst");
-            
             go.layer = canvas.gameObject.layer;
-            
             Vector3 camForward = canvasCam != null ? canvasCam.transform.forward : Vector3.forward;
             go.transform.position = worldPos - camForward * 0.5f;
 
             var ps = go.AddComponent<ParticleSystem>();
-            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); // Sistem oynamadan ayar yapmak için durdur
 
             var rend = go.GetComponent<ParticleSystemRenderer>();
             rend.material = GetRoundParticleMaterial();
-            
             rend.sortingLayerID = canvas.sortingLayerID;
             rend.sortingOrder = canvas.sortingOrder + 100;
 
             var main = ps.main;
-            main.duration = 0.6f;
+            main.duration = 0.8f; 
             main.loop = false;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(0.4f, 0.65f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(speed * s * 0.5f, speed * s * 1.0f);
-            main.startSize = new ParticleSystem.MinMaxCurve(cellSize * 0.5f * s, cellSize * 1.0f * s);
+            main.playOnAwake = false; // Ayarlardan önce oynamasın
+            
+           
+            // 1. Ömür aralığını genişlet (Bazıları erken, bazıları geç sönsün)
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.35f, 0.75f);
+            
+            // 2. Hızları birbirinden farklılaştır (Kimi uzağa, kimi yakına gitsin)
+            main.startSpeed = new ParticleSystem.MinMaxCurve(speed * s * 0.3f, speed * s * 1.2f);
+            
+            // 3. Boyutları belirgin yap
+            main.startSize = new ParticleSystem.MinMaxCurve(cellSize * 0.3f * s, cellSize * 0.65f * s);
             
             main.startColor = new ParticleSystem.MinMaxGradient(solidColor, paleColor);
-            main.playOnAwake = false;
             main.stopAction = ParticleSystemStopAction.Destroy;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
 
@@ -139,25 +142,31 @@ namespace Game.Board
             em.SetBursts(new ParticleSystem.Burst[] { new ParticleSystem.Burst(0f, (short)particleCount) });
 
             var shape = ps.shape;
-            shape.enabled = true;
             shape.shapeType = ParticleSystemShapeType.Sphere;
-            shape.radius = cellSize * 0.15f * s; 
+            shape.radius = cellSize * 0.1f * s; 
 
+            // 4. HAVA SÜRTÜNMESİ (DAMPEN): Parçacıklar fırladıktan sonra yavaşlayarak durur.
             var limitVel = ps.limitVelocityOverLifetime;
             limitVel.enabled = true;
-            limitVel.limit = 0f;          
-            limitVel.dampen = 0.15f;      
+            limitVel.limit = 0.1f;    
+            limitVel.dampen = 0.25f;  
 
+            // 5. BOYUT KÜÇÜLME: Havada asılı kalırken yavaşça küçülsünler
             var sol = ps.sizeOverLifetime;
             sol.enabled = true;
-            sol.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0)));
+            sol.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0, 1), new Keyframe(0.6f, 0.8f), new Keyframe(1, 0)));
 
+            // 6. YAVAŞÇA SÖNME (Alpha Fade)
             var col = ps.colorOverLifetime;
             col.enabled = true;
             Gradient grad = new Gradient();
             grad.SetKeys(
                 new GradientColorKey[] { new GradientColorKey(Color.white, 0f) },
-                new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) }
+                new GradientAlphaKey[] { 
+                    new GradientAlphaKey(1.0f, 0.0f), 
+                    new GradientAlphaKey(0.8f, 0.6f), 
+                    new GradientAlphaKey(0.0f, 1.0f) 
+                }
             );
             col.color = grad;
 

@@ -229,6 +229,6 @@ namespace Game.Board
             ui.Set(x, y, type, tileSprites[(int)type]);
         }
 
-        // VFX KODLARI BOARDVFX.CS İÇİNE TAŞINMIŞTIR.
+       
     }
 }
