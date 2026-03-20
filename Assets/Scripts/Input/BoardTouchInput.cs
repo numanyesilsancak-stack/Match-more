@@ -42,7 +42,11 @@ namespace Game.Board
             if (InputGate.Blocked) return;
 
             var pos = finger.screenPosition;
-            if (!view || !view.ScreenToCell(pos, uiCamera, out var x, out var y)) return;
+            
+            // Eğer BoardView üzerinden bir kamera tanımlandıysa onu kullan (Camera modu için zorunlu), aksi halde eskisini fallback olarak kullan.
+            Camera camToUse = (view != null && view.CanvasCam != null) ? view.CanvasCam : uiCamera;
+            
+            if (!view || !view.ScreenToCell(pos, camToUse, out var x, out var y)) return;
 
             _pressed = true;
             _pressPos = pos;

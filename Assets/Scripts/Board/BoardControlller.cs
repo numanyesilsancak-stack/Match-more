@@ -58,7 +58,10 @@ namespace Game.Board
             if (!input) input = GetComponentInChildren<BoardTouchInput>(true);
             if (!audioFX) audioFX = GetComponentInChildren<BoardAudio>(true);
 
+            
             DOTween.SetTweensCapacity(500, 50);
+             
+            
         }
 
         private void OnEnable()
