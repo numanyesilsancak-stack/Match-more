@@ -46,17 +46,19 @@ namespace Game.Board
 
         private bool _busy;
 
-        // ── Lifecycle ─────────────────────────────────────────────────────────
-
         private void Awake()
         {
-            // VSync (Dikey Senkronizasyon) Kullanımı: 
-            // Cihazın donanımsal ekran yenileme hızına (60Hz, 90Hz, 120Hz) %100 ayak uydurur.
-            // Bu sayede hedef FPS atamaya gerek kalmaz, pürüzsüz ve "yırtılmasız" (tearing-free) çalışır.
-            QualitySettings.vSyncCount = 1;         // Ekranın her yenilenmesinde 1 kare çiz (Yani monitör hızıyla kilitlen)
-            Application.targetFrameRate = -1;       // Sınırı kaldır ki VSync işini yapsın
+            // FPS Cap
+            QualitySettings.vSyncCount = 1;
 
-            Input.multiTouchEnabled = false; // Eşleştirme oyunlarında Multi-Touch'ı kapatmak bug'ları engeller
+            // Ekran hızı alınabiliyorsa onu hedef al, yoksa 60'a sabitle
+            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value > 0 
+                ? (int)Screen.currentResolution.refreshRateRatio.value 
+                : 60;
+
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+            UnityEngine.Input.multiTouchEnabled = false; 
 
             _save = Services.Save;
             _currency = Services.Currency;
@@ -66,7 +68,7 @@ namespace Game.Board
             if (!input) input = GetComponentInChildren<BoardTouchInput>(true);
             if (!audioFX) audioFX = GetComponentInChildren<BoardAudio>(true);
 
-            DOTween.SetTweensCapacity(500, 50);
+            DOTween.SetTweensCapacity(700, 50);
         }
 
         private void OnEnable()
