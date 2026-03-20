@@ -50,6 +50,14 @@ namespace Game.Board
 
         private void Awake()
         {
+            // VSync (Dikey Senkronizasyon) Kullanımı: 
+            // Cihazın donanımsal ekran yenileme hızına (60Hz, 90Hz, 120Hz) %100 ayak uydurur.
+            // Bu sayede hedef FPS atamaya gerek kalmaz, pürüzsüz ve "yırtılmasız" (tearing-free) çalışır.
+            QualitySettings.vSyncCount = 1;         // Ekranın her yenilenmesinde 1 kare çiz (Yani monitör hızıyla kilitlen)
+            Application.targetFrameRate = -1;       // Sınırı kaldır ki VSync işini yapsın
+
+            Input.multiTouchEnabled = false; // Eşleştirme oyunlarında Multi-Touch'ı kapatmak bug'ları engeller
+
             _save = Services.Save;
             _currency = Services.Currency;
             _progress = new ProgressService(_save, _currency);
