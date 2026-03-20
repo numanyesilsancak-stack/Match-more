@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4bb1f9d988566042aecd0bd5d9789a6, type: 3}
+  m_Name: LevelData_011
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Levels.LevelData
+  levelIndex: 11
+  width: 8
+  height: 8
+  moveLimit: 20
+  tileTypes: 6
+  blockerChance: 0.0011999999
+  rewardMultiplier: 1.088
+  goals:
+  - tileType: 0
+    requiredCount: 12
+    icon: {fileID: 1282386795, guid: 29ad1a8393d20304cbf4e13f8bd50836, type: 3}
+  - tileType: 1
+    requiredCount: 12
+    icon: {fileID: -195017928, guid: 29ad1a8393d20304cbf4e13f8bd50836, type: 3}
+  - tileType: 2
+    requiredCount: 11
+    icon: {fileID: -334020171, guid: 29ad1a8393d20304cbf4e13f8bd50836, type: 3}
+  - tileType: 4
+    requiredCount: 10
+    icon: {fileID: -512456135, guid: 29ad1a8393d20304cbf4e13f8bd50836, type: 3}
