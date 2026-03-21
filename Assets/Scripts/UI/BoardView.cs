@@ -87,7 +87,9 @@ namespace Game.Board
             _canvas.planeDistance = 100f;  // Kameranın far clip plane'inden küçük bir değer
             _canvas.sortingOrder = 0;
 
-            Debug.Log("<color=yellow>[BoardView] Canvas → Screen Space - Camera moduna geçirildi (Particle görünürlüğü için)</color>");
+#if UNITY_EDITOR
+            Debug.Log("<color=yellow>[BoardView] Canvas → Screen Space - Camera</color>");
+#endif
         }
 
         public void ClearAll()

@@ -14,10 +14,10 @@ namespace Game.Board
     public sealed class MovePurchaseHandler : MonoBehaviour
     {
         [Header("Refs")]
-        [SerializeField] private BoardController board;   // sahnedeki board controller
-        [SerializeField] private Button buyButton;        // buton
-        [SerializeField] private TMP_Text costText;       // opsiyonel-gelişebilir
-        [SerializeField] private TMP_Text goldText;       // opsiyonel-gelişebilir
+        [SerializeField] private BoardController board;
+        [SerializeField] private Button buyButton;
+        [SerializeField] private TMP_Text costText;
+        [SerializeField] private TMP_Text goldText;
 
         [Header("Config")]
         [SerializeField] private int addMoves = 5;
@@ -87,7 +87,6 @@ namespace Game.Board
             buyButton.interactable = (board != null && board.Session != null && gold >= cost);
         }
 
-        // Button OnClick
         public void BuyMoves()
         {
             if (board == null || board.Session == null)
@@ -102,18 +101,10 @@ namespace Game.Board
                 return;
             }
 
-            // Session içindeki gerçek kalan hamle alanını burada kullan
             int newMovesTotal = board.Session.MovesLeft;
-            // Hamle UI’ları için genel değişim sinyali
             EventBus.RaiseMovesChanged(newMovesTotal);
-            // Sadece satın alma başarılı olduğunda oynayacak sinyal
             EventBus.RaiseMovesPurchased(addMoves, newMovesTotal);
 
-
-            // UI refresh + hamle event           
-
-            // EventBus.RaiseToast($"+{addMoves} Moves added!");
-            
             RefreshUI();
         }
     }

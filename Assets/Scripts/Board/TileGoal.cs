@@ -1,16 +1,3 @@
-using UnityEngine;
-
-public class TileGoal : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
+// This file is intentionally left minimal.
+// The actual TileGoal struct lives in Scripts/UI/TileGoal.cs (namespace Game.Levels).
+// This MonoBehaviour placeholder has been removed to avoid confusion.

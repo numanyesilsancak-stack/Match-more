@@ -48,7 +48,9 @@ namespace Game.Audio
             ApplyBgmVolume(_bgmMul);
             ApplySfxVolume(_sfxMul);
 
+#if UNITY_EDITOR
             Debug.Log($"GlobalAudio ready. master={AudioListener.volume:0.00} bgmMul={_bgmMul:0.00} sfxMul={_sfxMul:0.00}", this);
+#endif
         }
 
         public void ApplyBgmVolume(float mul01)

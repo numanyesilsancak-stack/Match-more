@@ -5,9 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using Game.Core;
-using UnityEditor;
 using UnityEngine.Pool;
-using Unity.VisualScripting;
 
 namespace Game.UI
 {

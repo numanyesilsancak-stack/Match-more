@@ -9,6 +9,8 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]serSettings/
+/.utmp/
+/.gemini/
 
 # Memory dumps can be large
 *.lldmp
