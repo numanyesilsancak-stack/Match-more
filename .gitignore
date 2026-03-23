@@ -64,3 +64,6 @@ crashlytics-build.properties
 # Packed Assets
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*
 /[Aa]ssets/[Ss]treaming[Aa]ssets/aa/*
+/Assets/Sprites
+/ProjectSettings/TimelineSettings.asset
+/ProjectSettings/ProjectSettings.asset

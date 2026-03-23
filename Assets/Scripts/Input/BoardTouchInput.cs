@@ -43,6 +43,11 @@ namespace Game.Board
 
             var pos = finger.screenPosition;
             
+            // Unity'nin yeni Input Sisteminde bazı Android cihazlarda dokunma pozisyonu sonsuzluk (Infinity/NaN) hatası atabiliyor.
+            // Bu bozuk veriyi ayıklamazsak oyun çöker veya NativeInputException fırlatılır.
+            if (float.IsInfinity(pos.x) || float.IsInfinity(pos.y) || float.IsNaN(pos.x) || float.IsNaN(pos.y)) 
+                return;
+            
             // Eğer BoardView üzerinden bir kamera tanımlandıysa onu kullan (Camera modu için zorunlu), aksi halde eskisini fallback olarak kullan.
             Camera camToUse = (view != null && view.CanvasCam != null) ? view.CanvasCam : uiCamera;
             
@@ -60,7 +65,11 @@ namespace Game.Board
 
             if (InputGate.Blocked) { _pressed = false; return; }
 
-            var delta = finger.screenPosition - _pressPos;
+            var pos = finger.screenPosition;
+            if (float.IsInfinity(pos.x) || float.IsInfinity(pos.y) || float.IsNaN(pos.x) || float.IsNaN(pos.y)) 
+                return;
+
+            var delta = pos - _pressPos;
             if (delta.sqrMagnitude < swipeThresholdPx * swipeThresholdPx) return;
 
             int dx = 0, dy = 0;
